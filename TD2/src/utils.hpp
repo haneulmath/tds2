@@ -1,6 +1,13 @@
-#pragma once
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
-#include "fraction.hpp"
+#include <string>
+#include <vector>
 
-unsigned int gcd(unsigned int a, unsigned int b);
-Fraction simplify(Fraction const& f);
+// Fonction pour vérifier si une chaîne de caractères représente un nombre flottant
+bool is_floating(const std::string& s);
+
+// Fonction pour évaluer une expression en notation polonaise inversée
+float npi_evaluate(const std::vector<std::string>& tokens);
+
+#endif 

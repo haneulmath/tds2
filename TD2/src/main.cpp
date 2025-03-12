@@ -1,52 +1,32 @@
 #include <iostream>
-#include "fraction.hpp"
+#include <string>
+#include <sstream>
+#include <vector>
+#include "utils.hpp"
 
-int main()
-{
-    Fraction f1 { 3, 4 };
-    Fraction f2 { 1, 2 };
+// Fonction pour séparer une chaîne de caractères en mots
+std::vector<std::string> tokenize(const std::string& expression) {
+    std::istringstream iss(expression);
+    std::vector<std::string> tokens;
+    std::string token;
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
 
-    std::cout << "f1 = " << f1 << " f2 = " << f2 << std::endl;
+int main() {
+    std::string expression;
+    std::cout << "Entrez une expression en notation polonaise inversée: ";
+    std::getline(std::cin, expression);
 
-    Fraction f3 { add(f1, f2) };
-
-    std::cout << "add(f1, f2) = " << f3;
-
-    std::cout << std::endl << "sub(f1, f2) = " << sub(f1, f2);
-
-    std::cout << std::endl << "mul(f1, f2) = " << mul(f1, f2);
-
-    // Conversio en float
-    std::cout << std::endl << "mul(f1, f2) float = " << (f1 * f2).to_float();
-    std::cout << std::endl << "mul(f1, f2) float = " << static_cast<float>(f1 * f2);
-
-    std::cout << std::endl << "div(f1, f2) = " << div(f1, f2);
-
-    std::cout << std::endl << "add(1/6, 2/6) = " << add({1, 6}, {2, 6});
-
-    std::cout << std::endl << "f1 == f2 : " << (f1 == f2);
-
-    std::cout << std::endl << "f1 == f1 : " << (f1 == f1);
-
-    std::cout << std::endl << "f1 != f2 : " << (f1 != f2);
-
-    std::cout << std::endl << "f1 != f1 : " << (f1 != f1);
-
-    std::cout << std::endl << "f1 < f2 : " << (f1 < f2);
-
-    std::cout << std::endl << "f1 > f2 : " << (f1 > f2);
-
-    std::cout << std::endl << "f1 <= f2 : " << (f1 >= f2);
-
-    std::cout << std::endl << "f1 >= f1 : " << (f1 >= f1);
-
-    std::cout << std::endl << "f1 += f2 : " << (f1 += f2);
-
-    std::cout << std::endl << "f1 -= f2 : " << (f1 -= f2);
-
-    std::cout << std::endl << "f1 *= f2 : " << static_cast<float>(f1 *= f2);
-
-    std::cout << std::endl << "f1 /= f2 : " << static_cast<float>(f1 /= f2);
+    try {
+        std::vector<std::string> tokens = tokenize(expression);
+        float result = npi_evaluate(tokens);
+        std::cout << "Le résultat est: " << result << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Erreur: " << e.what() << std::endl;
+    }
 
     return 0;
 }

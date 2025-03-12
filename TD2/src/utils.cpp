@@ -1,61 +1,49 @@
 #include "utils.hpp"
+#include <stack>
+#include <sstream>
+#include <stdexcept>
+#include <regex>
 
-unsigned int gcd(unsigned int a, unsigned int b) {
-    while (b != 0) {
-        unsigned int modulo {a % b};
-        a = b;
-        b = modulo;
+// Fonction pour vérifier si une chaîne de caractères représente un nombre flottant
+bool is_floating(const std::string& s) {
+    std::regex float_regex("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?");
+    return std::regex_match(s, float_regex);
+}
+
+// Fonction pour évaluer une expression en notation polonaise inversée
+float npi_evaluate(const std::vector<std::string>& tokens) {
+    std::stack<float> stack;
+
+    for (const auto& token : tokens) {
+        if (is_floating(token)) {
+            stack.push(std::stof(token));
+        } else {
+            if (stack.size() < 2) {
+                throw std::invalid_argument("Expression invalide");
+            }
+            float b = stack.top(); stack.pop();
+            float a = stack.top(); stack.pop();
+
+            if (token == "+") {
+                stack.push(a + b);
+            } else if (token == "-") {
+                stack.push(a - b);
+            } else if (token == "*") {
+                stack.push(a * b);
+            } else if (token == "/") {
+                if (b == 0) {
+                    throw std::invalid_argument("Division par zéro");
+                }
+                stack.push(a / b);
+            } else {
+                throw std::invalid_argument("Opérateur inconnu: " + token);
+            }
+        }
     }
 
-    return a;
-}
-// recursive version
-// unsigned int gcd(unsigned int a, unsigned int b) {
-//     if (b == 0) {
-//         return a;
-//     }
-//
-//     return gcd(b, a % b);
-// }
-// ternary operator version
-// unsigned int gcd(unsigned int a, unsigned int b) {
-//     return b == 0 ? a : gcd(b, a % b);
-// }
+    if (stack.size() != 1) {
+        throw std::invalid_argument("Expression invalide");
+    }
 
-
-Fraction simplify(Fraction const& f) {
-    unsigned int divisor { gcd(f.numerator, f.denominator) };
-
-    return {
-        f.numerator / divisor,
-        f.denominator / divisor
-    };
-}
-
-Fraction add(Fraction const& f1, Fraction const& f2) {
-    return simplify({
-        f1.numerator * f2.denominator + f2.numerator * f1.denominator,
-        f1.denominator * f2.denominator
-    });
-}
-
-Fraction sub(Fraction const& f1, Fraction const& f2) {
-    return simplify({
-        f1.numerator * f2.denominator - f2.numerator * f1.denominator,
-        f1.denominator * f2.denominator
-    });
-}
-
-Fraction mul(Fraction const& f1, Fraction const& f2) {
-    return simplify({
-        f1.numerator * f2.numerator,
-        f1.denominator * f2.denominator
-    });
-}
-
-Fraction div(Fraction const& f1, Fraction const& f2) {
-    return simplify({
-        f1.numerator * f2.denominator,
-        f1.denominator * f2.numerator
-    });
+    return stack.top();
 }

@@ -10,4 +10,5 @@ bool is_floating(const std::string& s);
 // Fonction pour évaluer une expression en notation polonaise inversée
 float npi_evaluate(const std::vector<std::string>& tokens);
 
+
 #endif 

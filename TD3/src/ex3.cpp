@@ -79,16 +79,10 @@ int main() {
         bubble_sort(vec);
     }
 
-    // std::cout << "Sorted by Bubble Sort:" << std::endl;
-    // print_vector(vec);
-
     {
         ScopedTimer timer("Quick Sort");
         quick_sort(vec_copy);
     }
-
-    // std::cout << "Sorted by Quick Sort:" << std::endl;
-    // print_vector(vec_copy);
 
     return 0;
 }

@@ -1,60 +1,52 @@
+#include <string>
 #include <vector>
+#include <algorithm>
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <algorithm> 
-#include <numeric>
 
-int main() {
-    // Générateur nb aléatoires
-    std::srand(std::time(0));
-
-    // Création d'un vecteur de 10 éléments
-    std::vector<int> vector01(10);
-    for (auto& val : vector01) {
-        val = std::rand() % 101; 
-    }
-
-    // Affichage avant tri
-    std::cout << "Vecteur avant tri : ";
-    for (auto it = vector01.begin(); it != vector01.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-
-    // Tri du vecteur
-    std::sort(vector01.begin(), vector01.end());
-
-    // Affichage après tri
-    std::cout << "Vecteur après tri : ";
-    for (auto it = vector01.begin(); it != vector01.end(); ++it) {
-        std::cout << *it << " ";
-    }
-    std::cout << std::endl;
-
-    // Calcul de la somme des éléments
-    int sum = std::accumulate(vector01.begin(), vector01.end(), 0);
-    std::cout << "La somme des éléments du vecteur est : " << sum << std::endl;
-
-    // Saisie 
-    int userInput;
-    std::cout << "Entrez un nombre à rechercher : ";
-    std::cin >> userInput;
-
-    // Recherche d'un élément
-    auto it = std::find(vector01.begin(), vector01.end(), userInput);
-    if (it != vector01.end()) {
-        std::cout << "Element trouvé à la position " << std::distance(vector01.begin(), it)+1 << std::endl;
-    } else {
-        std::cout << "Element non trouvé" << std::endl;
-    }
-
-    // Nb d'occurrences
-    int count = std::count(vector01.begin(), vector01.end(), userInput);
-    std::cout << "Le nombre " << userInput << " apparaît " << count << " fois " <<std::endl;
-
-
-    return 0;
+// Fonction pour compter les lettres du premier mot
+int compteLettresPremierMot(const std::string& phrase) {
+    auto it = std::find(phrase.begin(), phrase.end(), ' ');
+    return std::distance(phrase.begin(), it);
 }
 
+// Fonction pour découper une phrase en mots
+std::vector<std::string> split_string(std::string const& str) {
+    std::vector<std::string> mots;
+    std::string mot;
+    
+    for (char c : str) {
+        if (c == ' ') {
+            if (!mot.empty()) {
+                mots.push_back(mot);
+                mot.clear();
+            }
+        } else {
+            mot += c;
+        }
+    }
+    
+    // Ajouter le dernier mot s'il existe
+    if (!mot.empty()) {
+        mots.push_back(mot);
+    }
+    
+    return mots;
+}
 
+// Exemple d'utilisation
+int main() {
+    std::string phrase;
+    
+    std::cout << "Entrez une phrase : ";
+    std::getline(std::cin, phrase);
+    
+    std::cout << "Nombre de lettres du premier mot : " << compteLettresPremierMot(phrase) << std::endl;
+    
+    auto mots = split_string(phrase);
+    std::cout << "Mots de la phrase :" << std::endl;
+    for (const auto& mot : mots) {
+        std::cout << mot << std::endl;
+    }
+    
+    return 0;
+}

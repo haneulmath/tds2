@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <stdexcept>
 #include "utils.hpp"
 
 // Fonction pour séparer une chaîne de caractères en mots
@@ -19,11 +20,10 @@ int main() {
     std::string expression;
     std::cout << "Entrez une expression en notation polonaise inversée (main2): ";
     std::getline(std::cin, expression);
-
+    
     try {
         std::vector<std::string> words = split(expression);
-        std::vector<Token> tokens = tokenize(words);
-        float result = npi_evaluate(tokens);
+        float result = npi_evaluate(words);
         std::cout << "Le résultat est: " << result << std::endl;
     } catch (const std::invalid_argument& e) {
         std::cerr << "Erreur: " << e.what() << std::endl;
